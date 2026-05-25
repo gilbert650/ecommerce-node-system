@@ -1,0 +1,363 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amazon Style E-Commerce System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#eaeded;
+}
+
+/* HEADER */
+header{
+    background:#131921;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    color:#ff9900;
+}
+
+.search-box{
+    flex:1;
+    margin:0 20px;
+}
+
+.search-box input{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:5px;
+}
+
+.cart{
+    font-size:18px;
+    cursor:pointer;
+}
+
+/* NAV */
+nav{
+    background:#232f3e;
+    color:white;
+    padding:10px;
+    display:flex;
+    gap:20px;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+}
+
+/* HERO */
+.hero{
+    background:url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200') center/cover;
+    height:300px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-size:40px;
+    font-weight:bold;
+}
+
+/* PRODUCTS */
+.products{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+.product{
+    background:white;
+    border-radius:10px;
+    padding:15px;
+    text-align:center;
+    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+
+.product img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.product h3{
+    margin:10px 0;
+}
+
+.price{
+    color:green;
+    font-size:22px;
+    margin:10px 0;
+}
+
+button{
+    background:#ff9900;
+    border:none;
+    padding:10px 15px;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#e68a00;
+}
+
+/* CART PANEL */
+.cart-panel{
+    position:fixed;
+    top:0;
+    right:-400px;
+    width:350px;
+    height:100%;
+    background:white;
+    box-shadow:-2px 0 10px rgba(0,0,0,0.3);
+    transition:0.3s;
+    padding:20px;
+    overflow:auto;
+    z-index:1000;
+}
+
+.cart-panel.active{
+    right:0;
+}
+
+.cart-item{
+    border-bottom:1px solid #ccc;
+    padding:10px 0;
+}
+
+.total{
+    font-size:22px;
+    margin-top:20px;
+    color:green;
+}
+
+/* FOOTER */
+footer{
+    background:#131921;
+    color:white;
+    text-align:center;
+    padding:20px;
+    margin-top:20px;
+}
+
+.checkout{
+    background:green;
+    color:white;
+    width:100%;
+    margin-top:15px;
+}
+
+.close-btn{
+    background:red;
+    color:white;
+    margin-bottom:15px;
+}
+
+@media(max-width:768px){
+    .hero{
+        font-size:25px;
+        text-align:center;
+        padding:20px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">ShopZone</div>
+
+    <div class="search-box">
+        <input type="text" id="search" placeholder="Search products...">
+    </div>
+
+    <div class="cart" onclick="toggleCart()">
+        🛒 Cart (<span id="cart-count">0</span>)
+    </div>
+</header>
+
+<nav>
+    <a href="#">Home</a>
+    <a href="#">Electronics</a>
+    <a href="#">Fashion</a>
+    <a href="#">Gaming</a>
+    <a href="#">Books</a>
+</nav>
+
+<div class="hero">
+    BIGGEST ONLINE STORE
+</div>
+
+<div class="products" id="products"></div>
+
+<!-- CART -->
+<div class="cart-panel" id="cartPanel">
+    <button class="close-btn" onclick="toggleCart()">Close</button>
+    <h2>Your Cart</h2>
+
+    <div id="cart-items"></div>
+
+    <div class="total">
+        Total: $<span id="total">0</span>
+    </div>
+
+    <button class="checkout">Checkout</button>
+</div>
+
+<footer>
+    <h3>ShopZone E-Commerce System</h3>
+    <p>Amazon Style Website Using HTML, CSS, JavaScript & Node.js Ready</p>
+</footer>
+
+<script>
+const products = [
+{
+    id:1,
+    name:"Gaming Laptop",
+    price:1200,
+    image:"https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=800"
+},
+{
+    id:2,
+    name:"Wireless Headphones",
+    price:150,
+    image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800"
+},
+{
+    id:3,
+    name:"Smartphone",
+    price:899,
+    image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800"
+},
+{
+    id:4,
+    name:"Smart Watch",
+    price:250,
+    image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800"
+},
+{
+    id:5,
+    name:"Gaming Chair",
+    price:300,
+    image:"https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800"
+},
+{
+    id:6,
+    name:"Fashion Shoes",
+    price:99,
+    image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800"
+}
+];
+
+const productContainer = document.getElementById("products");
+const cartItems = document.getElementById("cart-items");
+const totalDisplay = document.getElementById("total");
+const cartCount = document.getElementById("cart-count");
+
+let cart = [];
+
+// DISPLAY PRODUCTS
+function displayProducts(items){
+    productContainer.innerHTML = "";
+
+    items.forEach(product => {
+        productContainer.innerHTML += `
+        <div class="product">
+            <img src="${product.image}">
+            <h3>${product.name}</h3>
+            <div class="price">$${product.price}</div>
+            <button onclick="addToCart(${product.id})">
+                Add To Cart
+            </button>
+        </div>
+        `;
+    });
+}
+
+displayProducts(products);
+
+// ADD TO CART
+function addToCart(id){
+    const item = products.find(p => p.id === id);
+    cart.push(item);
+
+    updateCart();
+}
+
+// UPDATE CART
+function updateCart(){
+    cartItems.innerHTML = "";
+
+    let total = 0;
+
+    cart.forEach((item,index) => {
+        total += item.price;
+
+        cartItems.innerHTML += `
+        <div class="cart-item">
+            <h4>${item.name}</h4>
+            <p>$${item.price}</p>
+
+            <button onclick="removeItem(${index})">
+                Remove
+            </button>
+        </div>
+        `;
+    });
+
+    totalDisplay.innerText = total;
+    cartCount.innerText = cart.length;
+}
+
+// REMOVE ITEM
+function removeItem(index){
+    cart.splice(index,1);
+    updateCart();
+}
+
+// TOGGLE CART
+function toggleCart(){
+    document.getElementById("cartPanel")
+    .classList.toggle("active");
+}
+
+// SEARCH
+document.getElementById("search")
+.addEventListener("keyup", function(){
+
+    const value = this.value.toLowerCase();
+
+    const filtered = products.filter(product =>
+        product.name.toLowerCase().includes(value)
+    );
+
+    displayProducts(filtered);
+});
+</script>
+
+</body>
+</html>
+```
